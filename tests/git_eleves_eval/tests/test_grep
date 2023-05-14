@@ -1,0 +1,55 @@
+#!/bin/bash
+
+GP=$1
+
+REQUIRED_FILE="./ftc"
+
+echo "" >> detailed_results_$GP
+echo "Résultats pour ctc" >> detailed_results_$GP
+
+if [ ! -f ${REQUIRED_FILE} ] 
+then
+    echo "⚠️ Executable ${REQUIRED_FILE} not found." >> recap_result_$GP
+    exit 1
+fi
+
+function test_find_grep () {
+    if [ ! "$(./ftc $1 "-ctc" "$2" 2>/dev/null )" == "$(grep "-rl" "$2" "$1"/* 2>/dev/null)"  ];
+    then
+        echo "🔴 Test of \"catch the cat\" failed for \"$2\"" >> detailed_results_$GP
+        echo "🔴 Test non validé pour ctc" >> recap_result_$GP
+        exit 1
+    else
+        echo "✅ Test of \"catch the cat\" succeeded (string: \"$2\")." >> detailed_results_$GP
+    fi
+}
+
+test_find_grep "arbre" "unit us. Add" "arbre/with.wavs"
+
+function test_find_grep_nb () {
+    if [ ! "$(./ftc $1 "-ctc" $2 2>/dev/null | wc -l)" == "$(grep "-rl" "$2" "$1"/* 2>/dev/null | wc -l)" ];
+    then
+        echo "🔴 Test of \"catch the cat\" failed for \"$2\"" >> detailed_results_$GP
+        echo "🔴 Test non validé pour ctc" >> recap_result_$GP
+        exit 1
+    else
+        echo "✅ Test of \"catch the cat\" succeeded (string: \"$2\")." >> detailed_results_$GP
+    fi
+}
+
+test_find_grep_nb "arbre" "Republican"
+
+function test_find_grep_regex () {
+    if [ ! "$(./ftc $1 "-ctc" $2 2>/dev/null | wc -l)" == "$(grep "-rl" "$2" "$1"/* 2>/dev/null | wc -l)" ];
+    then
+        echo "🔴 Test of \"catch the cat\" with regex failed for \"$2\"" >> detailed_results_$GP
+        echo "🔴 Test non validé pour ctc" >> recap_result_$GP
+        exit 1
+    else
+        echo "✅ Test of \"catch the cat\" with regex succeeded (regex: \"$2\")." >> detailed_results_$GP
+    fi
+}
+
+test_find_grep_regex "arbre" "mus.*"
+
+echo "✅ Test validé pour ctc" >> recap_result_$GP

@@ -1,0 +1,30 @@
+#!/bin/bash
+
+GP=$1
+
+REQUIRED_FILE="./ftc"
+
+echo "" >> detailed_results_$GP
+echo "Résultats pour parkour" >> detailed_results_$GP
+
+if [ ! -f ${REQUIRED_FILE} ] 
+then
+    echo "⚠️ Executable ${REQUIRED_FILE} not found." >> recap_result_$GP
+    exit 1
+fi
+
+function test_parkour () {
+    if [ ! "$(./ftc $1 | wc -l)" == "$(find "$1" | wc -l)" ];
+    then
+        echo "🔴 Test of the file tree failed for dir \"$1\"" >> detailed_results_$GP
+        echo "🔴 Test non validé pour parkour" >> recap_result_$GP
+        exit 1
+    else
+        echo "✅ Test of the file tree succeeded (dir: \"$1\")." >> detailed_results_$GP
+    fi
+}
+
+test_parkour "arbre"
+test_parkour "arbre/economic/service/newspaper/"
+
+echo "✅ Test validé pour parkour" >> recap_result_$GP

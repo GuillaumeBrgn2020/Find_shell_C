@@ -1,0 +1,66 @@
+#!/bin/bash
+
+if [ ! -d git_eleves_eval ]
+then
+    echo "Big pb, pas de git élèves"
+fi
+
+cd git_eleves_eval
+
+<< Comment
+for i in {3..9} 
+do
+	echo "Groupe $i"
+	cd rs2022proj20$i
+	make
+	echo "Test arguments"
+	./tests/test_args $i
+	echo "Test parcour"
+	./tests/test_parkour $i
+	echo "Test name"
+	./tests/test_name $i
+	echo "Test size"
+	./tests/test_size $i
+	echo "Test date"
+	./tests/test_date $i
+	echo "Test mime"
+	./tests/test_mime $i
+	echo "Test regex"
+	./tests/test_regex $i
+	echo "Test grep"
+	./tests/test_grep $i
+	echo "Test dir"
+	./tests/test_dir $i
+	echo "Test perm"
+	./tests/test_perm $i
+	cd ..
+done
+Comment
+for i in {36..57} 
+do
+	echo "Groupe $i"
+	cd rs2022proj2$i
+	make
+	echo "Test arguments"
+	./tests/test_args $i
+	echo "Test parcour"
+	./tests/test_parkour $i
+	echo "Test name"
+	./tests/test_name $i
+	echo "Test size"
+	./tests/test_size $i
+	echo "Test date"
+	./tests/test_date $i
+	echo "Test mime"
+	./tests/test_mime $i
+	echo "Test regex"
+	./tests/test_regex $i
+	echo "Test grep"
+	./tests/test_grep $i
+	echo "Test dir"
+	./tests/test_dir $i
+	echo "Test perm"
+	./tests/test_perm $i
+	cd ..
+done
+

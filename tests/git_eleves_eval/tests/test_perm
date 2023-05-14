@@ -1,0 +1,43 @@
+#!/bin/bash
+
+GP=$1
+
+REQUIRED_FILE="./ftc"
+
+echo "" >> detailed_results_$GP
+echo "Résultats pour perm" >> detailed_results_$GP
+
+if [ ! -f ${REQUIRED_FILE} ] 
+then
+    echo "⚠️ Executable ${REQUIRED_FILE} not found." >> recap_result_$GP
+    exit 1
+fi
+
+function test_find_perm () {
+    if [ ! "$(./ftc $1 "-perm" $2 | wc -l)" == "$(find "$1" "-perm" "$2" "-type" "f" | wc -l)" ];
+    then
+        echo "🔴 Test of perm failed for \"$2\"" >> detailed_results_$GP
+        echo "🔴 Test non validé pour perm" >> recap_result_$GP
+        exit 1
+    else
+        echo "✅ Test of perm succeeded (string: \"$2\")." >> detailed_results_$GP
+    fi
+}
+
+test_find_perm "arbre" "512"
+test_find_perm "arbre" "200"
+
+function test_find_perm_detailed () {
+    if [ ! "$(./ftc $1 "-perm" $2)" == "$(find "$1" "-perm" "$2" "-type" "f")" ];
+    then
+        echo "🔴 Test of perm failed for \"$2\"" >> detailed_results_$GP
+        echo "🔴 Test non validé pour perm" >> recap_result_$GP
+        exit 1
+    else
+        echo "✅ Test of perm succeeded (string: \"$2\")." >> detailed_results_$GP
+    fi
+}
+
+test_find_perm_detailed "arbre" "010" "arbre/traditional/study/if/within/ten.mov"
+
+echo "✅ Test validé pour perm" >> recap_result_$GP

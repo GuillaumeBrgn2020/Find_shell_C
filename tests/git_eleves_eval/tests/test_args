@@ -1,0 +1,57 @@
+#!/bin/bash
+
+GP=$1 
+
+REQUIRED_FILE="./ftc"
+
+if [ ! -f ${REQUIRED_FILE} ] 
+then
+    echo "⚠️ Executable ${REQUIRED_FILE} not found." >> recap_result_$GP
+    exit 1
+fi
+
+echo "Résultats pour args" >> detailed_results_$GP
+
+function test_wellformed_param () {
+    if [ ! "$(./ftc $1 "-test" $2 $3)" == "La valeur du flag $2 est $3" ];
+    then
+        echo "🔴 Test of basic arguments failed with flag \"$2\" and value \"$3\"" >> detailed_results_$GP
+        echo "🔴 Test non validé pour args" >> recap_result_$GP
+    else
+        echo "✅ Test of basic arguments succeeded (flag: \"$2\")." >> detailed_results_$GP
+    fi
+}
+
+test_wellformed_param "arbre" "-name" "hello"
+test_wellformed_param ".." "-size" "+9k"
+test_wellformed_param "." "-date" "5m"
+test_wellformed_param "." "-ctc" "coucou"
+
+function test_not_wellformed_param () {
+    if [ ! "$(./ftc $1 "-test" $2 $3 2>&1)" == "Le flag $2 n'est pas correct" ];
+    then 
+        echo "🔴 Test of incorrect arguments failed with flag $2" >> detailed_results_$GP
+        echo "🔴 Test non validé pour args" >> recap_result_$GP
+        exit 1
+    else
+        echo "✅ Test of incorrect arguments succeeded (wrong flag: \"$2\")." >> detailed_results_$GP
+    fi
+}
+
+test_not_wellformed_param "." "-hello" "non"
+
+function test_optional_param () {
+    if [ ! "$(./ftc $1 "-test" $2 $3)" == "La valeur du flag $2 est $3" ];
+    then
+        echo "🔴 Test of optional arguments failed with flag \"$2\" and value \"$3\"" >> detailed_results_$GP
+        echo "🔴 Test non validé pour args" >> recap_result_$GP
+        exit 1
+    else
+        echo "✅ Test of optional arguments succeeded (flag: \"$2\")." >> detailed_results_$GP
+    fi
+}
+
+test_optional_param "." "-perm" "732"
+test_optional_param "." "-threads" "2"
+
+echo "✅ Test validé pour args" >> recap_result_$GP

@@ -1,0 +1,31 @@
+#!/bin/bash
+
+
+echo "Groupe $1"
+
+ls
+make
+#ls
+echo "Test arguments"
+./tests/test_args $1
+echo "Test parcour"
+./tests/test_parkour $1
+echo "Test name"
+./tests/test_name $1
+echo "Test size"
+./tests/test_size $1
+echo "Test date"
+./tests/test_date $1
+echo "Test mime"
+./tests/test_mime $1
+echo "Test regex"
+./tests/test_regex $1
+echo "Test grep"
+./tests/test_grep $1
+echo "Test dir"
+./tests/test_dir $1
+echo "Test perm"
+./tests/test_perm $1
+cd ..
+
+

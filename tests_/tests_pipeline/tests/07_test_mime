@@ -1,0 +1,40 @@
+#!/bin/bash
+
+REQUIRED_FILE="./ftc"
+
+if [ ! -f ${REQUIRED_FILE} ] 
+then
+    echo "⚠️ Executable ${REQUIRED_FILE} not found."
+    exit 1
+fi
+
+function test_find_mime () {
+    if [ ! "$(./ftc $1 "-mime" $2)" == $3 ];
+    then
+        echo "🔴 Test of the mime type failed for type \"$2\""
+        exit 1
+    else
+        echo "✅ Test of find with mime type succeeded (type: \"$2\")."
+    fi
+}
+
+
+test_find_mime "arbre/economic/player/his/a/" "application" "arbre/economic/player/his/a/buy.xlsx"
+test_find_mime "arbre/economic/player/his/a/" "image/jpeg" "arbre/economic/player/his/a/quality.jpg "
+
+
+function test_find_mime_nb() {
+    if [ ! "$(./ftc "$1" "-mime" "$2" | wc -l)" == "$(find "$1" -name "$3" | wc -l)" ];
+    then
+        echo "🔴 Test of the mime type failed for type \"$2\""
+        echo "$3"
+        exit 1
+    else
+        echo "✅ Test of find with mime type succeeded (type: \"$2\")."
+    fi
+}
+
+test_find_mime_nb "arbre" "image/png" "*.png"
+test_find_mime_nb "arbre" "text/plain" "*.txt"
+test_find_mime_nb "arbre" "text/html" "*.html"
+test_find_mime_nb "arbre" "video/quicktime" "*.mov"

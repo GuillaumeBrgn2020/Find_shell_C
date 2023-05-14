@@ -1,0 +1,41 @@
+#!/bin/bash
+
+REQUIRED_FILE="./ftc"
+
+if [ ! -f ${REQUIRED_FILE} ] 
+then
+    echo "⚠️ Executable ${REQUIRED_FILE} not found."
+    exit 1
+fi
+
+function test_find_date () {
+    sleep 2m
+    touch $2
+    if [ ! "$(./ftc $1 -amin $3)" == $2 ];
+    then
+        echo "🔴 Test of the file tree failed for date param \"$3\""
+        echo  "$(./ftc $1 -amin $3)"
+        exit 1
+    else
+        echo "✅ Test of find with date succeeded (date: \"$3\")."
+    fi
+}
+
+test_find_date "arbre" "arbre/different/especially/sit.avi" "-1" 
+
+function test_find_date_several () {
+    sleep $4
+    touch $2
+    ls -l arbre/say/official/election/
+    if [ ! "$(./ftc $1 -amin $3 | wc -l)" == $5 ];
+    then
+        echo "🔴 Test of the file tree failed for date param \"$3\""
+        echo "$(./ftc $1 -amin $3 | wc -l)"
+        exit 1
+    else
+        echo "✅ Test of find with name succeeded (date: \"$3\")."
+    fi
+}
+
+test_find_date_several "arbre" "arbre/improve.mp3" "-3" "1m" "2"
+test_find_date_several "arbre" "arbre/say/official/election/type.mov" "-3" "0" "3"

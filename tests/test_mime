@@ -1,0 +1,46 @@
+#!/bin/bash
+
+GP=$1
+
+REQUIRED_FILE="./ftc"
+
+if [ ! -f ${REQUIRED_FILE} ] 
+then
+    echo "⚠️ Executable ${REQUIRED_FILE} not found." >> recap_result_$GP
+    exit 1
+fi
+
+echo "" >> detailed_results_$GP
+echo "Résultats pour mime" >> detailed_results_$GP
+
+function test_find_mime () {
+    if [ ! "$(./ftc $1 "-mime" $2)" == $3 ];
+    then
+        echo "🔴 Test of the mime type failed for type \"$2\""  >> detailed_results_$GP
+        echo "🔴 Test non validé pour mime" >> recap_result_$GP
+    else
+        echo "✅ Test of find with mime type succeeded (type: \"$2\")." >> detailed_results_$GP
+    fi
+}
+
+
+test_find_mime "arbre/yourself/nature/Republican/them/" "text/html" "arbre/yourself/nature/Republican/them/grow.html"
+test_find_mime "arbre/office/wide/policy/want/" "video/mp4" "arbre/office/wide/policy/want/offer.mp4"
+
+
+function test_find_mime_nb() {
+    if [ ! "$(./ftc "$1" "-mime" "$2" | wc -l)" == "$(find "$1" -name "$3" | wc -l)" ];
+    then
+        echo "🔴 Test of the mime type failed for type \"$2\""  >> detailed_results_$GP
+        echo "🔴 Test non validé pour mime" >> recap_result_$GP
+    else
+        echo "✅ Test of find with mime type succeeded (type: \"$2\")." >> detailed_results_$GP
+    fi
+}
+
+test_find_mime_nb "arbre" "image/png" "*.png"
+test_find_mime_nb "arbre" "text/plain" "*.txt"
+test_find_mime_nb "arbre" "text/html" "*.html"
+test_find_mime_nb "arbre" "video/quicktime" "*.mov"
+
+echo "✅ Test validé pour mime" >> recap_result_$GP

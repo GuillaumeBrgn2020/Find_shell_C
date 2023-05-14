@@ -1,0 +1,54 @@
+#!/bin/bash
+
+cd ..
+
+if [ ! -d git_eleves_eval ]
+then
+    mkdir git_eleves_eval
+fi
+
+cd git_eleves_eval
+
+for i in {1..9}
+do
+	#cd rs2022proj20$i
+	#git stash --include-untracked
+	echo rs2022proj20$i
+	git clone https://gitlab.telecomnancy.univ-lorraine.fr/rs2022/rs2022proj20$i.git
+	#git pull https://gitlab.telecomnancy.univ-lorraine.fr/rs2022/rs2022proj20$i.git
+done
+
+for i in {10..57}
+do
+	#cd rs2022proj2$i
+	#git stash --include-untracked
+	echo rs2022proj2$i
+	git clone https://gitlab.telecomnancy.univ-lorraine.fr/rs2022/rs2022proj2$i.git
+	#git pull https://gitlab.telecomnancy.univ-lorraine.fr/rs2022/rs2022proj2$i.git
+done
+
+<< Comment
+
+for i in {1..2}
+do
+	cd rs2022proj20$i
+	sudo cp -r ../../arbre arbre
+	rm -r tests
+	rm detailed_results_*
+	rm recap_result_*
+	cp -r ../../tests_eval tests
+	cd ..
+done
+
+<< Comment
+for i in {10..57}
+do
+	cd rs2022proj2$i
+	rm -r tests
+	rm detailed_results_*
+	rm recap_result_*
+	sudo cp -r ../../arbre arbre
+	cp -r ../../tests_eval tests
+	cd ..
+done
+Comment

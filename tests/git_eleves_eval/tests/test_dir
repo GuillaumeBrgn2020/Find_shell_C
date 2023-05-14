@@ -1,0 +1,31 @@
+#!/bin/bash
+
+GP=$1
+REQUIRED_FILE="./ftc"
+
+if [ ! -f ${REQUIRED_FILE} ] 
+then
+    echo "⚠️ Executable ${REQUIRED_FILE} not found." >> recap_result_$GP
+    exit 1
+fi
+
+echo "" >> detailed_results_$GP
+echo "Résultats pour dir" >> detailed_results_$GP
+
+function test_find_dir () {
+    if [ ! "$(./ftc $1 "-dir" $2 | wc -l)" == "$(find "$1" "-name" "$2" "-type" "d" | wc -l)" ];
+    then
+        echo "🔴 Test of find with name failed for file \"$2\"" >> detailed_results_$GP
+        echo "🔴 Test non validé pour dir" >> recap_result_$GP
+        exit 1
+    else
+        echo "✅ Test of find with name succeeded (file: \"$2\")." >> detailed_results_$GP
+    fi
+}
+
+
+test_find_dir "arbre" "sea"
+test_find_dir "arbre" "try"
+
+echo "✅ Test validé pour dir" >> recap_result_$GP
+echo $GP >> ../../ouiiiii

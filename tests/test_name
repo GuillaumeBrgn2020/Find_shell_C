@@ -1,0 +1,30 @@
+#!/bin/bash
+
+GP=$1
+
+REQUIRED_FILE="./ftc"
+
+echo "" >> detailed_results_$GP
+echo "Résultats pour name" >> detailed_results_$GP
+
+if [ ! -f ${REQUIRED_FILE} ] 
+then
+    echo "⚠️ Executable ${REQUIRED_FILE} not found." >> recap_result_$GP
+    exit 1
+fi
+
+function test_find_name () {
+    if [ ! "$(./ftc $1 "-name" $2 2>/dev/null)"  == "$3" ];
+    then
+        echo "🔴 Test of find with name failed for file \"$2\"" >> detailed_results_$GP
+        echo "🔴 Test non validé pour name" >> recap_result_$GP
+    else
+        echo "✅ Test of find with name succeeded (file: \"$2\")." >> detailed_results_$GP
+    fi
+}
+
+
+test_find_name "arbre/put/" "any.jpeg" "arbre/put/room/any.jpeg"
+test_find_name "arbre/yourself" "often.pages" "arbre/yourself/often.pages"
+
+echo "✅ Test validé pour name" >> recap_result_$GP

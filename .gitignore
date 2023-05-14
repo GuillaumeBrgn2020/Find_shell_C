@@ -1,0 +1,8 @@
+
+.idea/
+./obj/.*
+ftc
+
+*.o
+
+tests_/tests_pipeline/arbre/
